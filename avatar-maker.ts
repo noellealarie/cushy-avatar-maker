@@ -1,5 +1,3 @@
-import { type } from 'os'
-
 action('Framed Avatar Maker', {
     author: 'noellealarie',
     description: 'Creates an avatar in a round frame, with transparent background',
