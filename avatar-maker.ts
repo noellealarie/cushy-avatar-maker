@@ -1,3 +1,5 @@
+import { type } from 'os'
+
 action('Framed Avatar Maker', {
     author: 'noellealarie',
     description: 'Creates an avatar in a round frame, with transparent background',
@@ -20,8 +22,18 @@ action('Framed Avatar Maker', {
         resolution: form.group({
             label: 'Resolution',
             items: () => ({
-                portrait_width: form.int({ label: 'Portrait Width', default: 832 }),
-                portrait_height: form.int({ label: 'Portrait Height', default: 1216 }),
+                portrait_w_x_h: form.selectOne({
+                    label: 'Width x Height',
+                    choices: [
+                        { type: '1024x1024' },
+                        { type: '896x1152' },
+                        { type: '832x1216' },
+                        { type: '768x1344' },
+                        { type: '640x1536' },
+                    ],
+                }),
+                /* portrait_width: form.int({ label: 'Portrait Width', default: 832 }),
+                portrait_height: form.int({ label: 'Portrait Height', default: 1216 }), */
                 frame_diameter: form.int({ label: 'Frame Diameter', default: 1024 }),
                 frame_thickness: form.int({ label: 'Frame Thickness', default: 130 }),
             }),
@@ -79,7 +91,7 @@ action('Framed Avatar Maker', {
                 save_frame: form.bool({ label: 'Save Frame Image', default: false }),
                 save_portrait: form.bool({ label: 'Save Portrait Image', default: false }),
                 directory: form.str({ label: 'Output Directory', default: 'avatars' }),
-                delimeter: form.str({ label: 'Delimeter', default: '_' }),
+                delimiter: form.str({ label: 'Delimiter', default: '_' }),
                 date: form.bool({
                     label: 'Add Date',
                     tooltip: 'Adds date to the name of the image (YYYYMMDD)',
@@ -102,7 +114,9 @@ action('Framed Avatar Maker', {
     run: async (flow, p) => {
         const graph = flow.nodes
         const { steps, cfg, sampler, scheduler } = p
-        const { portrait_width, portrait_height } = p.resolution
+        const portrait_width = Number(p.resolution.portrait_w_x_h.type.split('x')[0])
+        const portrait_height = Number(p.resolution.portrait_w_x_h.type.split('x')[1])
+        flow.print(`Portrait Width: ${portrait_width}\nPortrait Height: ${portrait_height}`)
 
         const frame_width = p.resolution.frame_diameter
         const frame_height = p.resolution.frame_diameter
@@ -279,8 +293,8 @@ action('Framed Avatar Maker', {
             images: portrait_squared_image,
             model: 'u2net_human_seg',
             alpha_matting: 'true',
-            alpha_matting_background_threshold: 0,
-            alpha_matting_foreground_threshold: 260,
+            alpha_matting_background_threshold: 100,
+            alpha_matting_foreground_threshold: 200,
             alpha_matting_erode_size: 0,
             post_process_mask: 'true',
         })
@@ -332,10 +346,10 @@ action('Framed Avatar Maker', {
             let nameckpt = `${p.model.replace(/^(SDXL|SD1\.5)\\/, '')}`
 
             if (p.save.date) {
-                filename_prefix += `${p.save.delimeter}${namedate}`
+                filename_prefix += `${p.save.delimiter}${namedate}`
             }
             if (p.save.ckpt) {
-                filename_prefix += `${p.save.delimeter}${nameckpt}`
+                filename_prefix += `${p.save.delimiter}${nameckpt}`
             }
 
             let avatar_filename = `avatar${filename_prefix}`
@@ -347,7 +361,7 @@ action('Framed Avatar Maker', {
                     images: frame_image_alpha,
                     filename_prefix: frame_filename,
                     output_path: p.save.directory,
-                    filename_delimiter: p.save.delimeter,
+                    filename_delimiter: p.save.delimiter,
                     filename_number_padding: 1,
                     filename_number_start: 'false',
                     extension: 'png',
@@ -368,7 +382,7 @@ action('Framed Avatar Maker', {
                     images: graph.VAEDecode({ samples: portrait_start_latent, vae: vae }),
                     filename_prefix: portrait_filename,
                     output_path: p.save.directory,
-                    filename_delimiter: p.save.delimeter,
+                    filename_delimiter: p.save.delimiter,
                     filename_number_padding: 1,
                     filename_number_start: 'false',
                     extension: 'png',
@@ -388,7 +402,7 @@ action('Framed Avatar Maker', {
                 images: final_image,
                 filename_prefix: avatar_filename,
                 output_path: p.save.directory,
-                filename_delimiter: p.save.delimeter,
+                filename_delimiter: p.save.delimiter,
                 filename_number_padding: 1,
                 filename_number_start: 'false',
                 extension: 'png',
@@ -397,13 +411,13 @@ action('Framed Avatar Maker', {
                 overwrite_mode: 'false',
                 show_history: 'false',
                 show_history_by_prefix: 'false',
-                embed_workflow: p.save.embed ? 'true' : 'false',
+                embed_workflow: p.save.embed ? 'true': 'false',
                 show_previews: 'true',
             })
         } else {
-            graph.PreviewImage({ images: frame_image_alpha })
+            //graph.PreviewImage({ images: graph.VAEDecode({ samples: portrait_start_latent, vae: vae }) })
+            //graph.PreviewImage({ images: frame_image_alpha })
             graph.PreviewImage({ images: final_image })
-            graph.PreviewImage({ images: graph.VAEDecode({ samples: portrait_start_latent, vae: vae }) })
         }
 
         await flow.PROMPT()
