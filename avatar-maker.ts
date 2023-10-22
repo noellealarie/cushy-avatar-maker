@@ -1,5 +1,6 @@
-action('Framed Avatar Maker', {
+action({
     author: 'noellealarie',
+    name: 'Framed Avatar Maker',
     description: 'Creates an avatar in a round frame, with transparent background',
     ui: (form) => ({
         portrait_positive: form.string({ label: 'Portrait Positive', default: '', textarea: true }),
