@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../src/cards/DeckManifest.schema.json",
+    "name": "Avatar Maker",
+    "authorName": "noellealarie",
+    "description": "Creates an avatar in a frame, with transparent background",
+    "cards": [
+        {
+            "name": "Framed Avatar Maker",
+            "deckRelativeFilePath": "./avatar-maker.ts",
+            "priority": 100,
+            "style": "D",
+            "illustration": "./_imgs/card-img.png",
+            "description": "An all-in-one avatar and frame creator"
+        }
+    ]
+}
