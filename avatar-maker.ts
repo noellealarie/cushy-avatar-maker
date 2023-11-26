@@ -1,9 +1,6 @@
 action({
-    author: 'noellealarie',
-    name: 'Framed Avatar Maker',
-    description: 'Creates an avatar in a round frame, with transparent background',
     ui: (form) => ({
-        portrait_positive: form.string({ label: 'Portrait Positive', default: '', textarea: true }),
+        portrait_positive: form.string({ label: 'Portrait Positive', default: '', textarea: true, className: 'w-full' }),
         frame_positive: form.string({ label: 'Frame Positive', default: '', textarea: true }),
         negative: form.string({ label: 'Negative', default: '', textarea: true }),
         cuttoffs: form.list({
@@ -24,11 +21,11 @@ action({
                 portrait_w_x_h: form.selectOne({
                     label: 'Width x Height',
                     choices: [
-                        { type: '1024x1024' },
-                        { type: '896x1152' },
-                        { type: '832x1216' },
-                        { type: '768x1344' },
-                        { type: '640x1536' },
+                        { id: '1024x1024' },
+                        { id: '896x1152' },
+                        { id: '832x1216' },
+                        { id: '768x1344' },
+                        { id: '640x1536' },
                     ],
                 }),
                 /* portrait_width: form.int({ label: 'Portrait Width', default: 832 }),
@@ -410,7 +407,7 @@ action({
                 overwrite_mode: 'false',
                 show_history: 'false',
                 show_history_by_prefix: 'false',
-                embed_workflow: p.save.embed ? 'true': 'false',
+                embed_workflow: p.save.embed ? 'true' : 'false',
                 show_previews: 'true',
             })
         } else {
