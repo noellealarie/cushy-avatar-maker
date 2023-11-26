@@ -110,8 +110,8 @@ action({
     run: async (flow, p) => {
         const graph = flow.nodes
         const { steps, cfg, sampler, scheduler } = p
-        const portrait_width = Number(p.resolution.portrait_w_x_h.type.split('x')[0])
-        const portrait_height = Number(p.resolution.portrait_w_x_h.type.split('x')[1])
+        const portrait_width = Number(p.resolution.portrait_w_x_h.id.split('x')[0])
+        const portrait_height = Number(p.resolution.portrait_w_x_h.id.split('x')[1])
         flow.print(`Portrait Width: ${portrait_width}\nPortrait Height: ${portrait_height}`)
 
         const frame_width = p.resolution.frame_diameter
