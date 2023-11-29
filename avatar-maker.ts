@@ -1,4 +1,4 @@
-action({
+app({
     ui: (form) => ({
         portrait_positive: form.string({ label: 'Portrait Positive', default: '', textarea: true, className: 'w-full' }),
         frame_positive: form.string({ label: 'Frame Positive', default: '', textarea: true }),
